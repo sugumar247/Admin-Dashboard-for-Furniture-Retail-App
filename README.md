@@ -390,7 +390,7 @@ Refer to respective cloud provider documentation for Django deployment.
 
 <div align="center">
 
-### Built with ❤️ by Your Team
+### Built with ❤️
 
 ⭐ **If you found this helpful, please consider giving it a star!** ⭐
 
