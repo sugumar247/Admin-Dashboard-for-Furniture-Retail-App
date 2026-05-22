@@ -132,8 +132,7 @@ stock_prediction/
 │   └── wsgi.py                     # WSGI application
 │
 ├── manage.py                       # Django management script
-├── db.sqlite3                      # Local database
-└── firebase-adminsdk-*.json       # Firebase credentials
+└── db.sqlite3                      # Local database
 ```
 
 ---
