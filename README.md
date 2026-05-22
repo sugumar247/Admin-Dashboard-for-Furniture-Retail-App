@@ -380,57 +380,12 @@ Refer to respective cloud provider documentation for Django deployment.
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Here's how to get started:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow PEP 8 style guide
-- Add tests for new features
-- Update documentation
-- Use meaningful commit messages
-
----
-
 ## 📚 Documentation
 
 - **[Django Documentation](https://docs.djangoproject.com/)** - Framework docs
 - **[TensorFlow/Keras Guide](https://www.tensorflow.org/guide)** - Deep learning
 - **[Firebase Guide](https://firebase.google.com/docs)** - Database & auth
 - **[REST API Best Practices](https://restfulapi.net/)** - API design
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙋 Support & Questions
-
-- **Issues**: Open an issue on GitHub for bugs and feature requests
-- **Discussions**: Join our community discussions for general questions
-- **Email**: [your-email@example.com](mailto:your-email@example.com)
-
----
-
-## 🎯 Roadmap
-
-- [ ] Real-time WebSocket predictions
-- [ ] Multiple LSTM model ensemble
-- [ ] Advanced technical indicators
-- [ ] Email alerts for price movements
-- [ ] Mobile app version
-- [ ] Cryptocurrency support
-- [ ] Machine learning model versioning
-- [ ] Automated backtesting framework
 
 ---
 
