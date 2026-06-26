@@ -174,17 +174,46 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("generatePDFButton").addEventListener("click", function () {
         const element = document.getElementById('pdf-content');
         
+        // --- Prep for PDF Layout ---
+        // Force dark mode background on the container
+        element.classList.add('dark', 'bg-background', 'p-6'); 
+        
+        // Stack KPI cards 2x2 for better fit on A4
+        const kpiGrid = element.querySelector('.md\\:grid-cols-4');
+        if (kpiGrid) {
+            kpiGrid.classList.remove('md:grid-cols-4');
+            kpiGrid.classList.add('grid-cols-2');
+        }
+        
+        // Stack lists vertically to prevent squishing and column breaks
+        const listGrid = element.querySelector('.md\\:grid-cols-3');
+        if (listGrid) {
+            listGrid.classList.remove('md:grid-cols-3');
+            listGrid.classList.add('grid-cols-1', 'gap-8');
+        }
+
         // Setup PDF generation options
         const opt = {
             margin:       0.5,
             filename:     'sales_report.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#131315' },
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#131315', windowWidth: 1024 },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            pagebreak:    { mode: ['css', 'legacy'] }
         };
         
-        html2pdf().set(opt).from(element).save();
+        html2pdf().set(opt).from(element).save().then(() => {
+            // --- Restore original layout ---
+            element.classList.remove('dark', 'bg-background', 'p-6');
+            if (kpiGrid) {
+                kpiGrid.classList.remove('grid-cols-2');
+                kpiGrid.classList.add('md:grid-cols-4');
+            }
+            if (listGrid) {
+                listGrid.classList.remove('grid-cols-1', 'gap-8');
+                listGrid.classList.add('md:grid-cols-3');
+            }
+        });
     });
 });
 </script>
