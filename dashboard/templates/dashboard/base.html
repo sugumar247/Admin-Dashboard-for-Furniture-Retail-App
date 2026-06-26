@@ -1,0 +1,462 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script>
+        // Check theme immediately to prevent FOUC
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark'); // Default to dark
+        }
+    </script>
+    <title>{% block title %}Dashboard Overview - Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind_compiled.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --color-secondary-fixed: #e8ddff;
+            --color-surface-container-low: #f2f3ff;
+            --color-surface-tint: #732ee4;
+            --color-background: #faf8ff;
+            --color-surface-dim: #d2d9f4;
+            --color-on-tertiary-container: #e7e5f1;
+            --color-tertiary-fixed: #e3e1ed;
+            --color-on-primary-container: #ede0ff;
+            --color-primary-container: #7c3aed;
+            --color-on-tertiary-fixed-variant: #46464f;
+            --color-tertiary: #4e4e58;
+            --color-tertiary-fixed-dim: #c7c5d1;
+            --color-surface: #faf8ff;
+            --color-surface-variant: #dae2fd;
+            --color-on-secondary-fixed: #21005e;
+            --color-surface-container-high: #e2e7ff;
+            --color-on-secondary-container: #3f1e8c;
+            --color-on-primary-fixed-variant: #5a00c6;
+            --color-tertiary-container: #666670;
+            --color-outline: #7b7487;
+            --color-on-error-container: #93000a;
+            --color-surface-container-highest: #dae2fd;
+            --color-inverse-primary: #d2bbff;
+            --color-surface-container: #eaedff;
+            --color-primary-fixed-dim: #d2bbff;
+            --color-outline-variant: #ccc3d8;
+            --color-on-secondary-fixed-variant: #4f319c;
+            --color-secondary-container: #ab8ffe;
+            --color-secondary: #674bb5;
+            --color-on-primary-fixed: #25005a;
+            --color-error-container: #ffdad6;
+            --color-secondary-fixed-dim: #cebdff;
+            --color-inverse-on-surface: #eef0ff;
+            --color-surface-bright: #faf8ff;
+            --color-inverse-surface: #283044;
+            --color-primary-fixed: #eaddff;
+            --color-primary: #630ed4;
+            --color-on-secondary: #ffffff;
+            --color-on-surface-variant: #4a4455;
+            --color-on-tertiary-fixed: #1a1b23;
+            --color-surface-container-lowest: #ffffff;
+            --color-on-surface: #131b2e;
+            --color-on-background: #131b2e;
+            --color-on-error: #ffffff;
+            --color-on-tertiary: #ffffff;
+            --color-on-primary: #ffffff;
+            --color-error: #ba1a1a;
+        }
+
+        html.dark {
+            --color-secondary-fixed: #e3dfff;
+            --color-surface-container-low: #1c1b1d;
+            --color-surface-tint: #cebdff;
+            --color-background: #131315;
+            --color-surface-dim: #131315;
+            --color-on-tertiary-container: #3b3500;
+            --color-tertiary-fixed: #f8e454;
+            --color-on-primary-container: #3c1989;
+            --color-primary-container: #a78bfa;
+            --color-on-tertiary-fixed-variant: #504700;
+            --color-tertiary: #dbc839;
+            --color-tertiary-fixed-dim: #dbc839;
+            --color-surface: #131315;
+            --color-surface-variant: #353437;
+            --color-on-secondary-fixed: #181445;
+            --color-surface-container-high: #2a2a2c;
+            --color-on-secondary-container: #b3afe9;
+            --color-on-primary-fixed-variant: #4f319c;
+            --color-tertiary-container: #af9e00;
+            --color-outline: #948e9d;
+            --color-on-error-container: #ffdad6;
+            --color-surface-container-highest: #353437;
+            --color-inverse-primary: #674bb5;
+            --color-surface-container: #201f22;
+            --color-primary-fixed-dim: #cebdff;
+            --color-outline-variant: #494552;
+            --color-on-secondary-fixed-variant: #444173;
+            --color-secondary-container: #444173;
+            --color-secondary: #c4c1fb;
+            --color-on-primary-fixed: #21005e;
+            --color-error-container: #93000a;
+            --color-secondary-fixed-dim: #c4c1fb;
+            --color-inverse-on-surface: #313032;
+            --color-surface-bright: #39393b;
+            --color-inverse-surface: #e5e1e4;
+            --color-primary-fixed: #e8ddff;
+            --color-primary: #cebdff;
+            --color-on-secondary: #2d2a5b;
+            --color-on-surface-variant: #cac4d4;
+            --color-on-tertiary-fixed: #201c00;
+            --color-surface-container-lowest: #0e0e10;
+            --color-on-surface: #e5e1e4;
+            --color-on-background: #e5e1e4;
+            --color-on-error: #690005;
+            --color-on-tertiary: #373100;
+            --color-on-primary: #381385;
+            --color-error: #ffb4ab;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex antialiased pb-[80px] md:pb-0">
+    <!-- Global Notification Container -->
+    <div id="global-notification-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-[90%] max-w-md"></div>
+    <!-- SideNavBar (Desktop/Tablet) -->
+    <aside class="hidden md:flex fixed left-0 top-0 h-screen w-[280px] bg-surface-container-low border-r border-outline-variant flex-col py-stack-lg z-50">
+        <div class="px-gutter mb-stack-lg">
+            <h1 class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Admin Dashboard</h1>
+            <p class="font-label-mono text-label-mono text-on-surface-variant mt-base">Retail Management v2.0</p>
+        </div>
+        <div class="px-gutter mb-stack-lg">
+            <a href="{% url 'add_new_products' %}" class="w-full bg-primary text-on-primary font-label-mono text-label-mono py-2 rounded flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors scale-98-active transition-all">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                New Product
+            </a>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1">
+            <a href="{% url 'dashboard_overview' %}" class="flex items-center gap-3 py-2 pl-4 hover:bg-surface-container-high transition-colors scale-98-active transition-all {% if request.resolver_match.url_name == 'dashboard_overview' %}text-primary font-bold border-l-2 border-primary{% else %}text-on-surface-variant{% endif %}">
+                <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'dashboard_overview' %}icon-fill{% endif %}">dashboard</span>
+                <span class="font-label-mono text-label-mono">Dashboard</span>
+            </a>
+            <a href="{% url 'stock_prediction' %}" class="flex items-center gap-3 py-2 pl-4 hover:bg-surface-container-high transition-colors scale-98-active transition-all {% if request.resolver_match.url_name == 'stock_prediction' %}text-primary font-bold border-l-2 border-primary{% else %}text-on-surface-variant{% endif %}">
+                <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'stock_prediction' %}icon-fill{% endif %}">trending_up</span>
+                <span class="font-label-mono text-label-mono">Stock Prediction</span>
+            </a>
+            <a href="{% url 'stock_management' %}" class="flex items-center gap-3 py-2 pl-4 hover:bg-surface-container-high transition-colors scale-98-active transition-all {% if request.resolver_match.url_name == 'stock_management' %}text-primary font-bold border-l-2 border-primary{% else %}text-on-surface-variant{% endif %}">
+                <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'stock_management' %}icon-fill{% endif %}">inventory_2</span>
+                <span class="font-label-mono text-label-mono">Stock Management</span>
+            </a>
+            <a href="{% url 'reports_analytics' %}" class="flex items-center gap-3 py-2 pl-4 hover:bg-surface-container-high transition-colors scale-98-active transition-all {% if request.resolver_match.url_name == 'reports_analytics' %}text-primary font-bold border-l-2 border-primary{% else %}text-on-surface-variant{% endif %}">
+                <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'reports_analytics' %}icon-fill{% endif %}">analytics</span>
+                <span class="font-label-mono text-label-mono">Reports & Analytics</span>
+            </a>
+        </nav>
+        <div class="mt-auto flex flex-col gap-1">
+            <a href="{% url 'admin_logout' %}" class="flex items-center gap-3 py-2 text-on-surface-variant pl-4 hover:bg-surface-container-high transition-colors scale-98-active transition-all text-error">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="font-label-mono text-label-mono">Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="md:ml-[280px] w-full md:w-[calc(100%-280px)] min-h-screen flex flex-col relative">
+        <!-- TopNavBar -->
+        <header class="fixed top-0 right-0 left-0 md:left-[280px] h-16 z-40 bg-background/80 backdrop-blur-md flex justify-between items-center px-gutter border-b border-outline-variant">
+            <!-- Mobile Brand Title -->
+            <h1 class="md:hidden text-headline-lg-mobile font-headline-lg-mobile font-bold text-primary tracking-tight truncate mr-4">Admin Dashboard</h1>
+            
+            <nav class="hidden md:flex items-center gap-stack-lg h-full">
+            </nav>
+            <div class="flex items-center gap-stack-md">
+                <div class="flex items-center gap-3 ml-4 border-l border-outline-variant pl-4">
+                    <button id="theme-toggle" class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" title="Toggle Theme">
+                        <span id="theme-icon" class="material-symbols-outlined">light_mode</span>
+                    </button>
+                    <button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+                    <button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+                    <button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">settings</span></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Canvas / Main Content -->
+        <div class="pt-[96px] px-4 md:px-margin pb-4 md:pb-margin max-w-container-max mx-auto w-full relative">
+            <div id="main-content-wrapper" class="w-full h-full transition-opacity duration-200">
+                {% block content %}{% endblock %}
+            </div>
+            
+            <!-- Global Skeleton Loader -->
+            <div id="global-skeleton-loader" class="hidden w-full h-full flex flex-col gap-6 pt-2 animate-pulse">
+                <!-- Skeleton Header -->
+                <div class="flex justify-between items-center mb-2">
+                    <div class="h-10 bg-surface-variant rounded-md w-1/3 md:w-1/4"></div>
+                    <div class="h-10 bg-surface-variant rounded-md w-24"></div>
+                </div>
+                <!-- Skeleton KPI Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-stack-lg">
+                    <div class="h-[120px] bg-surface-variant rounded-lg w-full border border-outline-variant/30"></div>
+                    <div class="h-[120px] bg-surface-variant rounded-lg w-full border border-outline-variant/30"></div>
+                    <div class="h-[120px] bg-surface-variant rounded-lg w-full border border-outline-variant/30"></div>
+                    <div class="h-[120px] bg-surface-variant rounded-lg w-full border border-outline-variant/30"></div>
+                </div>
+                <!-- Skeleton Main Chart Area -->
+                <div class="h-[400px] bg-surface-variant rounded-lg w-full border border-outline-variant/30 mt-2"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- BottomNavBar (Mobile) -->
+    <nav class="md:hidden bg-surface-container-highest border-t border-outline-variant shadow-lg fixed bottom-0 left-0 w-full flex justify-around items-center h-[80px] px-1 z-50 pb-[env(safe-area-inset-bottom)]">
+        <a href="{% url 'dashboard_overview' %}" class="flex flex-col items-center justify-center px-2 md:px-4 py-2 rounded-xl transition-all {% if request.resolver_match.url_name == 'dashboard_overview' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant hover:bg-surface-variant{% endif %}">
+            <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'dashboard_overview' %}icon-fill{% endif %}">home</span>
+            <span class="font-label-mono text-[10px] mt-1">Home</span>
+        </a>
+        <a href="{% url 'stock_management' %}" class="flex flex-col items-center justify-center px-2 md:px-4 py-2 rounded-xl transition-all {% if request.resolver_match.url_name == 'stock_management' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant hover:bg-surface-variant{% endif %}">
+            <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'stock_management' %}icon-fill{% endif %}">inventory_2</span>
+            <span class="font-label-mono text-[10px] mt-1">Stock</span>
+        </a>
+        <a href="{% url 'stock_prediction' %}" class="flex flex-col items-center justify-center px-2 md:px-4 py-2 rounded-xl transition-all {% if request.resolver_match.url_name == 'stock_prediction' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant hover:bg-surface-variant{% endif %}">
+            <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'stock_prediction' %}icon-fill{% endif %}">trending_up</span>
+            <span class="font-label-mono text-[10px] mt-1">Predict</span>
+        </a>
+        <a href="{% url 'reports_analytics' %}" class="flex flex-col items-center justify-center px-2 md:px-4 py-2 rounded-xl transition-all {% if request.resolver_match.url_name == 'reports_analytics' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant hover:bg-surface-variant{% endif %}">
+            <span class="material-symbols-outlined {% if request.resolver_match.url_name == 'reports_analytics' %}icon-fill{% endif %}">analytics</span>
+            <span class="font-label-mono text-[10px] mt-1">Analytics</span>
+        </a>
+        <button id="open-more-menu" class="flex flex-col items-center justify-center px-2 md:px-4 py-2 rounded-xl transition-all text-on-surface-variant hover:bg-surface-variant">
+            <span class="material-symbols-outlined">menu</span>
+            <span class="font-label-mono text-[10px] mt-1">More</span>
+        </button>
+    </nav>
+    
+    <!-- Mobile More Menu Overlay -->
+    <div id="mobile-more-menu" class="fixed inset-0 bg-background/80 backdrop-blur-sm z-[60] hidden flex-col justify-end transition-opacity duration-300 opacity-0">
+        <div class="bg-surface-container-highest rounded-t-3xl p-6 flex flex-col gap-2 transform translate-y-full transition-transform duration-300 border-t border-outline-variant" id="mobile-more-content">
+            <div class="flex justify-between items-center mb-2 pb-4 border-b border-outline-variant">
+                <h2 class="text-headline-md font-bold text-on-surface">More Options</h2>
+                <button id="close-more-menu" class="text-on-surface-variant hover:text-primary p-2 bg-surface-container-low rounded-full"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            
+            <a href="{% url 'add_new_products' %}" class="flex items-center gap-4 py-4 text-on-surface hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[24px]">add_circle</span>
+                <span class="font-body-lg">Add New Product</span>
+            </a>
+            
+            <a href="#" class="flex items-center gap-4 py-4 text-on-surface hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[24px]">settings</span>
+                <span class="font-body-lg">Settings</span>
+            </a>
+            
+            <a href="{% url 'admin_logout' %}" class="flex items-center gap-4 py-4 text-error hover:text-error transition-colors mt-2 border-t border-outline-variant pt-6">
+                <span class="material-symbols-outlined text-[24px]">logout</span>
+                <span class="font-body-lg">Logout</span>
+            </a>
+            
+            <!-- Padding at bottom to ensure it clears the iOS home indicator -->
+            <div class="h-[env(safe-area-inset-bottom,20px)]"></div>
+        </div>
+    </div>
+    
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing moreMenu code ...
+            const moreMenu = document.getElementById('mobile-more-menu');
+            const moreContent = document.getElementById('mobile-more-content');
+            const openBtn = document.getElementById('open-more-menu');
+            const closeBtn = document.getElementById('close-more-menu');
+
+            if (openBtn && moreMenu) {
+                openBtn.addEventListener('click', () => {
+                    moreMenu.classList.remove('hidden');
+                    void moreMenu.offsetWidth;
+                    moreMenu.classList.remove('opacity-0');
+                    moreContent.classList.remove('translate-y-full');
+                });
+
+                closeBtn.addEventListener('click', () => {
+                    moreMenu.classList.add('opacity-0');
+                    moreContent.classList.add('translate-y-full');
+                    setTimeout(() => {
+                        moreMenu.classList.add('hidden');
+                    }, 300);
+                });
+                
+                moreMenu.addEventListener('click', (e) => {
+                    if (e.target === moreMenu) {
+                        closeBtn.click();
+                    }
+                });
+            }
+
+            // Global Skeleton Loader for Page Transitions
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    // Only trigger for internal navigations that aren't anchors or javascript
+                    if (href && href !== '#' && !href.startsWith('javascript') && !this.hasAttribute('target')) {
+                        const mainContent = document.getElementById('main-content-wrapper');
+                        const skeleton = document.getElementById('global-skeleton-loader');
+                        if (mainContent && skeleton) {
+                            mainContent.classList.add('opacity-0');
+                            setTimeout(() => {
+                                mainContent.classList.add('hidden');
+                                skeleton.classList.remove('hidden');
+                            }, 100);
+                        }
+                    }
+                });
+            });
+
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+
+            function updateThemeIcon() {
+                if (htmlElement.classList.contains('dark')) {
+                    themeIcon.textContent = 'light_mode'; // Show moon icon to switch to light
+                } else {
+                    themeIcon.textContent = 'dark_mode'; // Show sun icon to switch to dark
+                }
+            }
+            
+            // Set initial icon
+            if (themeIcon) updateThemeIcon();
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    if (htmlElement.classList.contains('dark')) {
+                        htmlElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        htmlElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                    updateThemeIcon();
+                });
+            }
+
+            // Global Notification Engine
+            window.showNotification = function(message, type = 'success', linkHtml = '') {
+                const container = document.getElementById('global-notification-container');
+                if (!container) return;
+
+                const notification = document.createElement('div');
+                // Colors based on type
+                let bgClass = 'bg-surface-container-high';
+                let iconClass = 'text-primary';
+                let iconName = 'info';
+                
+                if (type === 'success') {
+                    bgClass = 'bg-primary-container';
+                    iconClass = 'text-on-primary-container';
+                    iconName = 'check_circle';
+                } else if (type === 'error' || type === 'danger' || type === 'warning') {
+                    bgClass = 'bg-error-container';
+                    iconClass = 'text-on-error-container';
+                    iconName = 'error';
+                }
+
+                notification.className = `transform -translate-y-full opacity-0 transition-all duration-500 ease-out flex items-center p-4 text-on-surface ${bgClass} rounded-lg shadow-xl border border-outline-variant pointer-events-auto`;
+                
+                notification.innerHTML = `
+                    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${iconClass}">
+                        <span class="material-symbols-outlined text-[20px]">${iconName}</span>
+                    </div>
+                    <div class="ml-3 font-body-md text-on-surface">
+                        <span class="block">${message}</span>
+                        ${linkHtml}
+                    </div>
+                    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-on-surface-variant hover:text-on-surface rounded-lg p-1.5 hover:bg-surface-variant inline-flex items-center justify-center h-8 w-8 transition-colors" onclick="this.parentElement.remove()">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                `;
+
+                container.appendChild(notification);
+
+                // Animate In
+                requestAnimationFrame(() => {
+                    notification.classList.remove('-translate-y-full', 'opacity-0');
+                    notification.classList.add('translate-y-0', 'opacity-100');
+                });
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    notification.classList.remove('translate-y-0', 'opacity-100');
+                    notification.classList.add('-translate-y-full', 'opacity-0');
+                    setTimeout(() => notification.remove(), 500); // Wait for transition
+                }, 5000);
+            };
+
+            // Inject Django Messages
+            {% if messages %}
+                {% for message in messages %}
+                    window.showNotification("{{ message|escapejs }}", "{{ message.tags|escapejs }}");
+                {% endfor %}
+            {% endif %}
+
+            // Global Background Polling for AI Prediction
+            let pollingInterval = null;
+
+            function checkPredictionStatus() {
+                // Only poll if we think it's running
+                if (localStorage.getItem('predictionInProgress') === 'true') {
+                    fetch("{% url 'prediction_status' %}")
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'completed') {
+                                localStorage.removeItem('predictionInProgress');
+                                localStorage.removeItem('predictionType');
+                                
+                                const link = `<a href="{% url 'stock_prediction' %}" class="text-primary hover:underline text-sm font-bold mt-1 block">Click here to view results</a>`;
+                                window.showNotification("AI Prediction Complete!", "success", link);
+                                
+                                // If we are on the stock prediction page, reload it!
+                                if (window.location.pathname.includes('/stock_prediction/')) {
+                                    setTimeout(() => window.location.reload(), 1500);
+                                }
+                            } else if (data.status === 'cancelled') {
+                                localStorage.removeItem('predictionInProgress');
+                                localStorage.removeItem('predictionType');
+                                window.showNotification("Prediction cancelled.", "warning");
+                            } else if (data.status === 'none') {
+                                // Somehow the backend forgot about it (cache expired, server restart)
+                                localStorage.removeItem('predictionInProgress');
+                                localStorage.removeItem('predictionType');
+                                if (window.location.pathname.includes('/stock_prediction/')) {
+                                    window.location.reload();
+                                }
+                            }
+                        })
+                        .catch(err => console.error("Error polling status:", err));
+                }
+            }
+
+            // Start polling every 3 seconds if needed
+            if (localStorage.getItem('predictionInProgress') === 'true') {
+                pollingInterval = setInterval(checkPredictionStatus, 3000);
+            }
+            
+            // Expose function so stock_prediction.html can trigger it
+            window.startPredictionPolling = function() {
+                if (!pollingInterval) {
+                    pollingInterval = setInterval(checkPredictionStatus, 3000);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

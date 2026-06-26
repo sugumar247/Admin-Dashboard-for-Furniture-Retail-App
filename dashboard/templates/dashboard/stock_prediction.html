@@ -1,0 +1,254 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Stock Prediction{% endblock title %}
+
+{% block content %}
+<!-- Page Header & Filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-md mb-stack-lg">
+    <div>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background tracking-tight">Stock Prediction Model</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-1">AI-driven demand forecasting and restock recommendations.</p>
+    </div>
+    <div class="flex items-center gap-4">
+        <form method="post" class="flex bg-surface-container border border-outline-variant rounded p-1 w-fit" id="prediction-form">
+            {% csrf_token %}
+            <button type="submit" name="prediction_type" value="week" class="prediction-btn px-4 py-1.5 rounded text-on-surface-variant font-label-mono text-label-mono hover:text-on-background hover:bg-surface-variant transition-all flex items-center justify-center gap-2 min-w-[120px]">
+                <span class="btn-text">7D (Week)</span>
+                <span class="loading-spinner" style="display: none;"></span>
+                <span class="cancel-icon material-symbols-outlined text-[16px] text-error" style="display: none;">close</span>
+            </button>
+            <button type="submit" name="prediction_type" value="month" class="prediction-btn px-4 py-1.5 rounded text-on-surface-variant font-label-mono text-label-mono hover:text-on-background hover:bg-surface-variant transition-all flex items-center justify-center gap-2 min-w-[120px]">
+                <span class="btn-text">30D (Month)</span>
+                <span class="loading-spinner" style="display: none;"></span>
+                <span class="cancel-icon material-symbols-outlined text-[16px] text-error" style="display: none;">close</span>
+            </button>
+        </form>
+        <form action="{% url 'reset_prediction_cache' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" id="refreshButton" class="border border-outline-variant bg-surface-container-low text-on-surface font-label-mono text-label-mono px-4 py-1.5 rounded hover:bg-surface-container-high transition-colors">
+                Reset Cache
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- BENTO GRID LAYOUT -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+    <!-- Main Forecasting Chart (Spans 8 cols on large screens) -->
+    <div class="lg:col-span-8 bg-surface border border-outline-variant rounded-lg flex flex-col overflow-hidden relative group hover:border-primary/50 transition-colors duration-300">
+        <div class="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest/50">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">show_chart</span>
+                Demand Forecasting vs Current Stock
+            </h3>
+        </div>
+        <div class="p-stack-md flex-1 min-h-[300px] relative">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:40px_40px] opacity-30 pointer-events-none"></div>
+            <!-- Simulated Thin Line Chart -->
+            <svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+                <path d="M0,80 L10,75 L20,78 L30,60 L40,65 L50,50 L60,55 L70,40 L80,45 L90,30 L100,35" fill="none" stroke="#494552" stroke-linejoin="round" stroke-width="0.5"></path>
+                <path class="drop-shadow-[0_0_8px_rgba(206,189,255,0.3)]" d="M0,80 L10,70 L20,65 L30,45 L40,30 L50,35 L60,20 L70,10 L80,15 L90,5 L100,0" fill="none" stroke="#cebdff" stroke-linejoin="round" stroke-width="0.8"></path>
+                <path d="M0,80 L10,70 L20,65 L30,45 L40,30 L50,35 L60,20 L70,10 L80,15 L90,5 L100,0 L100,100 L0,100 Z" fill="url(#violet-gradient)" opacity="0.1"></path>
+                <defs>
+                    <lineargradient id="violet-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="#cebdff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#cebdff" stop-opacity="0"></stop>
+                    </lineargradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Key Metrics Column -->
+    <div class="lg:col-span-4 flex flex-col gap-gutter">
+        <div class="bg-surface border border-outline-variant rounded-lg p-stack-md flex flex-col justify-between hover:bg-surface-container-low transition-colors duration-300">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider mb-stack-md">AI Confidence Score</h3>
+            <div class="flex items-baseline gap-2">
+                <span class="font-display-lg text-display-lg text-primary">94.2</span>
+                <span class="font-headline-md text-headline-md text-primary">%</span>
+            </div>
+        </div>
+        <div class="bg-surface border border-outline-variant rounded-lg p-stack-md flex flex-col justify-between hover:bg-surface-container-low transition-colors duration-300">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider mb-stack-md">Projected Shortfall</h3>
+            <div class="flex items-baseline gap-2">
+                <span class="font-display-lg text-display-lg text-on-background">High</span>
+            </div>
+            <p class="mt-4 font-body-md text-body-md text-on-surface-variant">Review the table below for urgent restocks.</p>
+        </div>
+    </div>
+
+    <!-- Urgent Restock Recommendations (Spans full width below) -->
+    <div class="lg:col-span-12 bg-surface border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+        <div class="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest/50">
+            <h3 class="font-label-mono text-label-mono text-on-error uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px] icon-fill">warning</span>
+                Stock Prediction Results
+            </h3>
+            {% if predictions %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="add_stock" class="font-label-mono text-label-mono text-primary hover:text-primary-container transition-colors flex items-center gap-1">
+                    Add Stocks <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-outline-variant bg-surface-container-lowest">
+                        <th class="p-4 font-label-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Product</th>
+                        <th class="p-4 font-label-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-medium text-right">Predicted Stock Needed</th>
+                    </tr>
+                </thead>
+                <tbody class="font-body-md text-body-md">
+                    {% if predictions %}
+                        {% for product, prediction in predictions.items %}
+                        <tr class="border-b border-outline-variant/50 hover:bg-[#18181b] transition-colors group">
+                            <td class="p-4">
+                                <span class="font-medium text-on-background group-hover:text-primary transition-colors">{{ product }}</span>
+                            </td>
+                            <td class="p-4 text-right font-medium text-on-background">{{ prediction }} units</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="p-4 text-center text-on-surface-variant font-body-md">No predictions yet. Click a button to predict stock.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let abortController = null;
+
+    document.querySelectorAll('.prediction-btn').forEach(button => {
+        const btnText = button.querySelector('.btn-text');
+        const loadingSpinner = button.querySelector('.loading-spinner');
+        const cancelIcon = button.querySelector('.cancel-icon');
+
+        if (btnText && loadingSpinner && cancelIcon) {
+            
+            // Check initial state if navigating back while predicting
+            if (localStorage.getItem('predictionInProgress') === 'true') {
+                if (button.value === localStorage.getItem('predictionType')) {
+                    btnText.style.display = 'none';
+                    loadingSpinner.style.display = 'inline-block';
+                } else {
+                    button.disabled = true;
+                }
+            }
+            
+            // Hover logic to show the "Cancel" icon when predicting
+            button.addEventListener('mouseenter', () => {
+                if (localStorage.getItem('predictionInProgress') === 'true' && button.value === localStorage.getItem('predictionType')) {
+                    loadingSpinner.style.display = 'none';
+                    cancelIcon.style.display = 'inline-block';
+                    button.classList.add('bg-error-container', 'text-error');
+                    button.classList.remove('text-on-surface-variant');
+                }
+            });
+
+            button.addEventListener('mouseleave', () => {
+                if (localStorage.getItem('predictionInProgress') === 'true' && button.value === localStorage.getItem('predictionType')) {
+                    loadingSpinner.style.display = 'inline-block';
+                    cancelIcon.style.display = 'none';
+                    button.classList.remove('bg-error-container', 'text-error');
+                    button.classList.add('text-on-surface-variant');
+                }
+            });
+
+            button.addEventListener('click', async function (event) {
+                event.preventDefault();
+                
+                // If it's already running, this click means CANCEL
+                if (localStorage.getItem('predictionInProgress') === 'true') {
+                    if (abortController) {
+                        abortController.abort(); // Cancel frontend fetch
+                    }
+                    
+                    // Signal backend to cancel the loop
+                    fetch("{% url 'cancel_prediction' %}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    
+                    // Reset UI
+                    localStorage.removeItem('predictionInProgress');
+                    localStorage.removeItem('predictionType');
+                    btnText.style.display = 'inline-block';
+                    loadingSpinner.style.display = 'none';
+                    cancelIcon.style.display = 'none';
+                    button.classList.remove('bg-error-container', 'text-error');
+                    document.querySelectorAll('.prediction-btn').forEach(btn => btn.disabled = false);
+                    window.location.reload(); // Reload to show cancel message
+                    return;
+                }
+
+                // Start prediction
+                localStorage.setItem('predictionInProgress', 'true');
+                localStorage.setItem('predictionType', this.value);
+
+                btnText.style.display = 'none';
+                loadingSpinner.style.display = 'inline-block';
+                document.querySelectorAll('.prediction-btn').forEach(btn => {
+                    if(btn !== this) btn.disabled = true; // Disable the OTHER button
+                });
+
+                abortController = new AbortController();
+                const formData = new FormData(this.closest('form'));
+                formData.append('prediction_type', this.value);
+
+                try {
+                    const response = await fetch("{% url 'stock_prediction' %}", {
+                        method: 'POST',
+                        body: formData,
+                        signal: abortController.signal
+                    });
+                    
+                    const data = await response.json();
+                    if (data.status === 'started') {
+                        // The background thread has started!
+                        // Trigger the global poller from base.html
+                        if (window.startPredictionPolling) {
+                            window.startPredictionPolling();
+                        }
+                    }
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        console.log('Prediction aborted by user');
+                    } else {
+                        console.error('Prediction failed:', error);
+                        localStorage.removeItem('predictionInProgress');
+                        localStorage.removeItem('predictionType');
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    .loading-spinner {
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #a78bfa;
+        border-right: 2px solid transparent;
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}

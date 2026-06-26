@@ -1,0 +1,139 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Add New Product{% endblock %}
+
+{% block content %}
+<div class="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+    <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Add New Product</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-base">Enter product details to add to the inventory catalog.</p>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="add-product-form">
+    {% csrf_token %}
+    <div class="mb-stack-lg flex justify-end gap-3">
+        <a href="{% url 'dashboard_overview' %}" class="px-4 py-2 border border-outline text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Cancel</a>
+        <button type="submit" class="px-4 py-2 bg-primary-container text-on-primary-container rounded font-label-mono text-label-mono hover:bg-primary transition-colors">Save Product</button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Left Col: Form Details -->
+        <div class="lg:col-span-8 flex flex-col gap-stack-lg">
+            <!-- Basic Info Card -->
+            <div class="bg-surface border border-outline-variant rounded-lg p-6">
+                <div class="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-outline-variant">
+                    <h3 class="font-label-mono text-label-mono text-on-surface uppercase tracking-wider">Basic Information</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                    <div class="md:col-span-2">
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="product_name">Product Name</label>
+                        <input type="text" id="product_name" name="product_name" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="e.g. Ergonomic Office Chair V2" />
+                    </div>
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="product_key">Product Key (SKU)</label>
+                        <input type="text" id="product_key" name="product_key" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="e.g. FUR-OFF-002" />
+                    </div>
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="category_name">Category</label>
+                        <input type="text" id="category_name" name="category_name" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="e.g. Seating" />
+                    </div>
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="subcategory">Subcategory</label>
+                        <input type="text" id="subcategory" name="subcategory" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="e.g. Executive Chairs" />
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="image_url">Image URL</label>
+                        <input type="url" id="image_url" name="image_url" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="https://example.com/image.jpg" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Inventory Card -->
+            <div class="bg-surface border border-outline-variant rounded-lg p-6">
+                <div class="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-outline-variant">
+                    <h3 class="font-label-mono text-label-mono text-on-surface uppercase tracking-wider">Pricing & Inventory</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="price">Base Price (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+                            <input type="number" id="price" name="price" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 pl-8 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="discount">Discount (0 to 1)</label>
+                        <input type="number" id="discount" name="discount" step="0.01" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0.00" />
+                    </div>
+                    <div>
+                        <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base" for="current_stock_level">Initial Stock Level</label>
+                        <input type="number" id="current_stock_level" name="current_stock_level" required class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Col: Media -->
+        <div class="lg:col-span-4 flex flex-col gap-stack-lg">
+            <!-- Media Upload Card -->
+            <div class="bg-surface border border-outline-variant rounded-lg p-6 h-full flex flex-col">
+                <div class="flex justify-between items-center mb-stack-md pb-stack-sm border-b border-outline-variant">
+                    <h3 class="font-label-mono text-label-mono text-on-surface uppercase tracking-wider">Product Media</h3>
+                </div>
+                <div class="flex flex-col gap-2 mb-4">
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-base">3D Model File</label>
+                    <p class="font-body-md text-xs text-on-surface-variant">Upload a GLB, FBX, or OBJ file for 3D view.</p>
+                </div>
+                <div id="drop-zone" class="flex-1 border-2 border-dashed border-outline-variant rounded-lg bg-surface-container-lowest flex flex-col items-center justify-center p-6 text-center hover:border-primary hover:bg-surface-container-low transition-all cursor-pointer relative group">
+                    <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:bg-primary-container/20 transition-colors border border-outline-variant">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">cloud_upload</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface mb-2">Drag & Drop files here</p>
+                    <p class="font-label-mono text-label-mono text-on-surface-variant text-xs mb-4">Supports .glb, .fbx, .obj</p>
+                    <button type="button" class="px-4 py-1.5 border border-outline-variant rounded text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors z-10 pointer-events-none">Browse Files</button>
+                    <span class="drop-zone-text text-primary font-bold mt-4 font-body-md"></span>
+                    <input type="file" name="model_file" id="model_file" class="absolute inset-0 w-full h-full cursor-pointer opacity-0 z-20" accept=".glb,.fbx,.obj" required>
+                </div>
+                <div id="file-error" class="text-error font-body-md text-sm mt-2 text-center"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% block extra_js %}
+<script>
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("model_file");
+    const errorDiv = document.getElementById('file-error');
+    const allowedExtensions = ['.glb', '.fbx', '.obj'];
+    const dropZoneText = dropZone.querySelector(".drop-zone-text");
+
+    fileInput.addEventListener("dragover", (e) => {
+        dropZone.classList.add('border-primary-container', 'bg-surface-container-low');
+    });
+
+    fileInput.addEventListener("dragleave", () => {
+        dropZone.classList.remove('border-primary-container', 'bg-surface-container-low');
+    });
+    
+    fileInput.addEventListener("change", (e) => {
+        dropZone.classList.remove('border-primary-container', 'bg-surface-container-low');
+        if (fileInput.files.length) {
+            const file = fileInput.files[0];
+            const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+            if (!allowedExtensions.includes(extension)) {
+                errorDiv.textContent = "Only .glb, .fbx, and .obj files are allowed.";
+                fileInput.value = '';
+                dropZoneText.textContent = "";
+                dropZone.classList.remove("border-primary", "bg-primary/20");
+            } else {
+                errorDiv.textContent = "";
+                dropZoneText.textContent = "Selected: " + file.name;
+                dropZone.classList.add("border-primary", "bg-primary/20"); 
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

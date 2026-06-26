@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Dashboard - Login</title>
+    <link href="{% static 'css/tailwind_compiled.css' %}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --color-secondary-fixed: #e8ddff;
+            --color-surface-container-low: #f2f3ff;
+            --color-surface-tint: #732ee4;
+            --color-background: #faf8ff;
+            --color-surface-dim: #d2d9f4;
+            --color-on-tertiary-container: #e7e5f1;
+            --color-tertiary-fixed: #e3e1ed;
+            --color-on-primary-container: #ede0ff;
+            --color-primary-container: #7c3aed;
+            --color-on-tertiary-fixed-variant: #46464f;
+            --color-tertiary: #4e4e58;
+            --color-tertiary-fixed-dim: #c7c5d1;
+            --color-surface: #faf8ff;
+            --color-surface-variant: #dae2fd;
+            --color-on-secondary-fixed: #21005e;
+            --color-surface-container-high: #e2e7ff;
+            --color-on-secondary-container: #3f1e8c;
+            --color-on-primary-fixed-variant: #5a00c6;
+            --color-tertiary-container: #666670;
+            --color-outline: #7b7487;
+            --color-on-error-container: #93000a;
+            --color-surface-container-highest: #dae2fd;
+            --color-inverse-primary: #d2bbff;
+            --color-surface-container: #eaedff;
+            --color-primary-fixed-dim: #d2bbff;
+            --color-outline-variant: #ccc3d8;
+            --color-on-secondary-fixed-variant: #4f319c;
+            --color-secondary-container: #ab8ffe;
+            --color-secondary: #674bb5;
+            --color-on-primary-fixed: #25005a;
+            --color-error-container: #ffdad6;
+            --color-secondary-fixed-dim: #cebdff;
+            --color-inverse-on-surface: #eef0ff;
+            --color-surface-bright: #faf8ff;
+            --color-inverse-surface: #283044;
+            --color-primary-fixed: #eaddff;
+            --color-primary: #630ed4;
+            --color-on-secondary: #ffffff;
+            --color-on-surface-variant: #4a4455;
+            --color-on-tertiary-fixed: #1a1b23;
+            --color-surface-container-lowest: #ffffff;
+            --color-on-surface: #131b2e;
+            --color-on-background: #131b2e;
+            --color-on-error: #ffffff;
+            --color-on-tertiary: #ffffff;
+            --color-on-primary: #ffffff;
+            --color-error: #ba1a1a;
+        }
+
+        html.dark {
+            --color-secondary-fixed: #e3dfff;
+            --color-surface-container-low: #1c1b1d;
+            --color-surface-tint: #cebdff;
+            --color-background: #131315;
+            --color-surface-dim: #131315;
+            --color-on-tertiary-container: #3b3500;
+            --color-tertiary-fixed: #f8e454;
+            --color-on-primary-container: #3c1989;
+            --color-primary-container: #a78bfa;
+            --color-on-tertiary-fixed-variant: #504700;
+            --color-tertiary: #dbc839;
+            --color-tertiary-fixed-dim: #dbc839;
+            --color-surface: #131315;
+            --color-surface-variant: #353437;
+            --color-on-secondary-fixed: #181445;
+            --color-surface-container-high: #2a2a2c;
+            --color-on-secondary-container: #b3afe9;
+            --color-on-primary-fixed-variant: #4f319c;
+            --color-tertiary-container: #af9e00;
+            --color-outline: #948e9d;
+            --color-on-error-container: #ffdad6;
+            --color-surface-container-highest: #353437;
+            --color-inverse-primary: #674bb5;
+            --color-surface-container: #201f22;
+            --color-primary-fixed-dim: #cebdff;
+            --color-outline-variant: #494552;
+            --color-on-secondary-fixed-variant: #444173;
+            --color-secondary-container: #444173;
+            --color-secondary: #c4c1fb;
+            --color-on-primary-fixed: #21005e;
+            --color-error-container: #93000a;
+            --color-secondary-fixed-dim: #c4c1fb;
+            --color-inverse-on-surface: #313032;
+            --color-surface-bright: #39393b;
+            --color-inverse-surface: #e5e1e4;
+            --color-primary-fixed: #e8ddff;
+            --color-primary: #cebdff;
+            --color-on-secondary: #2d2a5b;
+            --color-on-surface-variant: #cac4d4;
+            --color-on-tertiary-fixed: #201c00;
+            --color-surface-container-lowest: #0e0e10;
+            --color-on-surface: #e5e1e4;
+            --color-on-background: #e5e1e4;
+            --color-on-error: #690005;
+            --color-on-tertiary: #373100;
+            --color-on-primary: #381385;
+            --color-error: #ffb4ab;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex selection:bg-primary selection:text-on-primary">
+    
+    <!-- Global Notification Container -->
+    <div id="global-notification-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-[90%] max-w-md"></div>
+
+    <!-- Left Panel: Branding & Context (Hidden on small screens) -->
+    <div class="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-surface-container-lowest border-r border-outline-variant relative overflow-hidden">
+        <!-- Subtle decorative gradient for depth, preserving developer-grade dark feel -->
+        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--color-primary-container),_transparent_80%)] opacity-[0.1] pointer-events-none"></div>
+        <div class="relative z-10">
+            <div class="flex items-center gap-3 text-primary mb-16">
+                <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+                <span class="font-headline-md font-extrabold text-xl tracking-tight text-on-surface">Admin Dashboard</span>
+            </div>
+            <h1 class="font-headline-lg font-bold text-4xl mb-4 tracking-tight text-on-surface">Admin Dashboard</h1>
+            <h2 class="font-body-lg text-xl font-medium text-on-surface-variant mb-6">Retail Management Platform</h2>
+            <p class="font-body-md text-on-surface-variant leading-relaxed max-w-md">
+                Enter your credentials to access inventory controls, sales analytics, and multi-channel fulfillment operations.
+            </p>
+        </div>
+        <div class="relative z-10">
+            <p class="font-label-mono text-xs font-semibold tracking-[0.2em] text-on-surface-variant uppercase">
+                V2.0 • Authorized Personnel Only
+            </p>
+        </div>
+    </div>
+
+    <!-- Right Panel: Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24 bg-background relative">
+        <div class="w-full max-w-md space-y-10">
+            <!-- Mobile Logo (Visible only when left panel is hidden) -->
+            <div class="lg:hidden flex items-center justify-center gap-2 mb-8 text-primary">
+                <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+                <span class="font-headline-md font-bold text-lg tracking-tight text-on-surface">Admin Dashboard</span>
+            </div>
+            
+            <!-- Form -->
+            <form class="space-y-6" method="post">
+                {% csrf_token %}
+                
+                <!-- Email Field -->
+                <div class="space-y-2">
+                    <label class="block font-label-mono text-xs font-bold tracking-[0.1em] text-on-surface-variant uppercase" for="email">
+                        Email Address
+                    </label>
+                    <div class="relative">
+                        <input name="email" class="w-full bg-surface-container border border-outline-variant text-on-surface placeholder-on-surface-variant/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-all duration-200 font-body-md" id="email" placeholder="admin@example.com" required="" type="email"/>
+                    </div>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="space-y-2">
+                    <label class="block font-label-mono text-xs font-bold tracking-[0.1em] text-on-surface-variant uppercase" for="password">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <input name="password" class="w-full bg-surface-container border border-outline-variant text-on-surface placeholder-on-surface-variant/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-all duration-200 font-body-md" id="password" placeholder="••••••••" required="" type="password"/>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <button class="w-full bg-primary text-on-primary font-headline-md font-bold tracking-wide py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors duration-200 mt-8 group active:scale-[0.98]" type="submit">
+                    <span>AUTHENTICATE</span>
+                    <span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1 text-xl">arrow_forward</span>
+                </button>
+                
+                <!-- Forgot Password Link -->
+                <div class="text-center mt-6">
+                    <a class="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">
+                        Forgot your password?
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.showNotification = function(message, type = 'error') {
+                const container = document.getElementById('global-notification-container');
+                if (!container) return;
+
+                const notification = document.createElement('div');
+                let bgClass = 'bg-error-container';
+                let iconClass = 'text-on-error-container';
+                let iconName = 'error';
+                
+                if (type === 'success') {
+                    bgClass = 'bg-primary-container';
+                    iconClass = 'text-on-primary-container';
+                    iconName = 'check_circle';
+                }
+
+                notification.className = `transform -translate-y-full opacity-0 transition-all duration-500 ease-out flex items-center p-4 text-on-surface ${bgClass} rounded-lg shadow-xl border border-outline-variant pointer-events-auto`;
+                
+                notification.innerHTML = `
+                    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${iconClass}">
+                        <span class="material-symbols-outlined text-[20px]">${iconName}</span>
+                    </div>
+                    <div class="ml-3 font-body-md text-on-surface">
+                        <span class="block">${message}</span>
+                    </div>
+                    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-on-surface-variant hover:text-on-surface rounded-lg p-1.5 hover:bg-surface-variant inline-flex items-center justify-center h-8 w-8 transition-colors" onclick="this.parentElement.remove()">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                `;
+
+                container.appendChild(notification);
+
+                requestAnimationFrame(() => {
+                    notification.classList.remove('-translate-y-full', 'opacity-0');
+                    notification.classList.add('translate-y-0', 'opacity-100');
+                });
+
+                setTimeout(() => {
+                    notification.classList.remove('translate-y-0', 'opacity-100');
+                    notification.classList.add('-translate-y-full', 'opacity-0');
+                    setTimeout(() => notification.remove(), 500);
+                }, 5000);
+            };
+
+            {% if messages %}
+                {% for message in messages %}
+                    window.showNotification("{{ message|escapejs }}", "{{ message.tags|escapejs }}" === "success" ? "success" : "error");
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

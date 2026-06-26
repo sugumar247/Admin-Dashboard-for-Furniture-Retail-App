@@ -1,0 +1,110 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-end mb-stack-lg">
+    <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Dashboard Overview</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">High-level metrics and recent performance data.</p>
+    </div>
+    <form action="{% url 'reset_dashboard_cache' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="border border-outline-variant bg-surface-container-low text-on-surface font-label-mono text-label-mono px-4 py-2 rounded hover:bg-surface-container-high transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px]">refresh</span>
+            Refresh Data
+        </button>
+    </form>
+</div>
+
+<!-- Metrics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Total Sales</h3>
+            <span class="material-symbols-outlined text-outline">payments</span>
+        </div>
+        <div class="min-w-0">
+            <div class="font-display-lg text-[32px] 2xl:text-display-lg text-primary truncate" title="${{ total_sales|floatformat:2 }}">${{ total_sales|floatformat:2 }}</div>
+            <div class="flex items-center gap-1 mt-2 text-tertiary">
+                <span class="material-symbols-outlined text-[14px]">trending_up</span>
+                <span class="font-label-mono text-label-mono">+12.4% vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Total Orders</h3>
+            <span class="material-symbols-outlined text-outline">shopping_cart</span>
+        </div>
+        <div class="min-w-0">
+            <div class="font-display-lg text-[32px] 2xl:text-display-lg text-on-surface truncate" title="{{ total_orders }}">{{ total_orders }}</div>
+            <div class="flex items-center gap-1 mt-2 text-tertiary">
+                <span class="material-symbols-outlined text-[14px]">trending_up</span>
+                <span class="font-label-mono text-label-mono">+8.1% vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Total Customers</h3>
+            <span class="material-symbols-outlined text-outline">group</span>
+        </div>
+        <div class="min-w-0">
+            <div class="font-display-lg text-[32px] 2xl:text-display-lg text-on-surface truncate" title="{{ total_customers }}">{{ total_customers }}</div>
+            <div class="flex items-center gap-1 mt-2 text-outline">
+                <span class="material-symbols-outlined text-[14px]">trending_flat</span>
+                <span class="font-label-mono text-label-mono">Steady growth</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Layout Grid for Chart and Top Products -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+    <!-- Monthly Growth Chart -->
+    <div class="lg:col-span-1 bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col">
+        <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider mb-6">Monthly Growth</h3>
+        <div class="flex-1 flex flex-col items-center justify-center min-h-[300px] border border-outline-variant border-dashed rounded bg-surface-dim relative overflow-hidden">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div class="font-display-lg text-display-lg text-primary z-10 relative">{{ monthly_growth }}%</div>
+            <p class="font-label-mono text-label-mono text-outline mt-2 z-10 relative">Overall Growth Rate</p>
+        </div>
+    </div>
+
+    <!-- Top Selling Products Table -->
+    <div class="lg:col-span-2 bg-surface-container-low border border-outline-variant rounded-xl p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Top Selling Products (Last Month)</h3>
+            <button class="text-primary hover:text-primary-fixed font-label-mono text-label-mono transition-colors">View All</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr>
+                        <th class="font-label-mono text-label-mono text-on-surface-variant pb-3 border-b border-outline-variant w-1/2">Product</th>
+                        <th class="font-label-mono text-label-mono text-on-surface-variant pb-3 border-b border-outline-variant text-right">Units Sold</th>
+                        <th class="font-label-mono text-label-mono text-on-surface-variant pb-3 border-b border-outline-variant text-right">Price</th>
+                        <th class="font-label-mono text-label-mono text-on-surface-variant pb-3 border-b border-outline-variant text-right">Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_selling_products %}
+                    <tr class="group hover:bg-surface-container-high transition-colors">
+                        <td class="py-4 border-b border-outline-variant flex items-center gap-4">
+                            <span class="font-body-md text-body-md text-on-surface truncate">{{ product.product_name }}</span>
+                        </td>
+                        <td class="py-4 border-b border-outline-variant font-body-md text-body-md text-on-surface text-right">{{ product.sales_last_month }}</td>
+                        <td class="py-4 border-b border-outline-variant font-label-mono text-label-mono text-on-surface-variant text-right">${{ product.unit_price|floatformat:2 }}</td>
+                        <td class="py-4 border-b border-outline-variant font-body-md text-body-md text-primary font-bold text-right">${{ product.total_revenue|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="py-4 text-center text-on-surface-variant font-body-md border-b border-outline-variant">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
