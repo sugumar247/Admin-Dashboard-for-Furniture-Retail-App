@@ -175,8 +175,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const element = document.getElementById('pdf-content');
         
         // --- Prep for PDF Layout ---
-        // Force dark mode background on the container
-        element.classList.add('dark', 'bg-background', 'p-6'); 
+        const isDark = document.documentElement.classList.contains('dark');
+        const bgColor = isDark ? '#131315' : '#faf8ff';
+
+        // Force a specific width that fits A4 well to prevent right-side black bars or cropping
+        const originalWidth = element.style.width;
+        element.style.width = '800px';
         
         // Stack KPI cards 2x2 for better fit on A4
         const kpiGrid = element.querySelector('.md\\:grid-cols-4');
@@ -197,14 +201,14 @@ document.addEventListener('DOMContentLoaded', function() {
             margin:       0.5,
             filename:     'sales_report.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#131315', windowWidth: 1024 },
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: bgColor },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
             pagebreak:    { mode: ['css', 'legacy'] }
         };
         
         html2pdf().set(opt).from(element).save().then(() => {
             // --- Restore original layout ---
-            element.classList.remove('dark', 'bg-background', 'p-6');
+            element.style.width = originalWidth;
             if (kpiGrid) {
                 kpiGrid.classList.remove('grid-cols-2');
                 kpiGrid.classList.add('md:grid-cols-4');
