@@ -137,5 +137,4 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_REPO = 'sugumar247/3d_models'
 GITHUB_BRANCH = 'main'  # or 'master'
-FIREBASE_APIKEY = 'AIzaSyCyniZoDHr2UdwZHi9c0FEecFpsMLGaSi8'
-
+FIREBASE_APIKEY = os.getenv("FIREBASE_APIKEY")
