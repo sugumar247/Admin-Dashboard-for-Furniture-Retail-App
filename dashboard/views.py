@@ -525,7 +525,6 @@ def send_firebase_notification(title, body):
 
     response = requests.post(url, headers=headers, json=message)
     print(f'FCM Notification sent. Status: {response.status_code}, Response: {response.text}')
-
 def upload_to_github(file):
     # Extract settings
     token = settings.GITHUB_TOKEN
@@ -544,24 +543,39 @@ def upload_to_github(file):
         'Authorization': f'token {token}',
         'Accept': 'application/vnd.github.v3+json',
     }
+
+    # 1. NEW: Check if the file already exists in the repo to fetch its SHA
+    sha = None
+    try:
+        check_response = requests.get(f"{url}?ref={branch}", headers=headers)
+        if check_response.status_code == 200:
+            sha = check_response.json().get('sha')
+    except Exception as e:
+        print(f"Pre-check failed, proceeding as new file upload: {e}")
+
     data = {
         'message': f'Upload 3D model: {filename}',
         'branch': branch,
         'content': content_encoded,
     }
 
+    # 2. NEW: If a SHA was found, append it to authorize an overwrite
+    if sha:
+        data['sha'] = sha
+
     # Make the PUT request to upload the file
     response = requests.put(url, headers=headers, json=data)
 
     if response.status_code in [200, 201]:
         username, repo_name = repo.split('/')
-    
-        model_url = f'https://raw.githubusercontent.com/{username}/{repo_name}/main/models/{filename}'
+        
+        # 3. IMPROVEMENT: Swapped hardcoded 'main' for the dynamic {branch} variable
+        model_url = f'https://raw.githubusercontent.com/{username}/{repo_name}/{branch}/models/{filename}'
         return model_url
     else:
         # Optional: log or raise detailed error
         raise Exception(f"Failed to upload: {response.status_code} {response.text}")
-
+        
 # Add New Product View
 def add_new_products(request):
     if request.method == 'POST':
