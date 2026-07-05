@@ -498,7 +498,7 @@ SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 PROJECT_ID = 'homehub-b1065'
 
 def get_access_token():
-    credentials = service_account.Credentials.from_service_account_file(
+    credentials = service_account.Credentials.from_service_account_info(
         creds_dict, scopes=SCOPES
     )
     credentials.refresh(Request())
